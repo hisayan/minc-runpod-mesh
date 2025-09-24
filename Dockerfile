@@ -1,18 +1,4 @@
-FROM runpod/pytorch:1.0.0-cu1281-torch271-ubuntu2204
-
-# 出力を強制的に表示
-RUN python --version && echo "Python version check completed"
-RUN python -m pip --version && echo "Pip version check completed"
-RUN uname -m && echo "Architecture check completed"
-
-RUN python -m pip install --upgrade pip setuptools wheel
-
-RUN python -m pip --version && echo "Pip version check completed"
-
-# PyPI 上でバージョン確認
-RUN python -m pip index versions open3d
-
-RUN pip install --no-cache-dir open3d==0.19.0
+FROM nvidia/cuda:13.0.1-runtime-ubuntu24.04
 
 # パッケージリストを更新
 RUN apt-get update
@@ -20,7 +6,10 @@ RUN apt-get update
 # 基本パッケージをインストール
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl \
-    ca-certificates
+    ca-certificates \
+    python3 \
+    python3-pip \
+    python3-venv
 
 # Open3D用の基本依存関係
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
